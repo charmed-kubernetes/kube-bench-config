@@ -29,7 +29,7 @@ master:
     confs:
       - /etc/kubernetes/manifests/kube-apiserver.yaml
       - /etc/kubernetes/manifests/kube-apiserver.manifest
-    defaultconf: /etc/kubernetes/manifests/kube-apiserver.yaml
+    defaultconf: /var/snap/kube-apiserver/current/args
 
   scheduler:
     bins:
@@ -40,7 +40,7 @@ master:
     confs:
       - /etc/kubernetes/manifests/kube-scheduler.yaml
       - /etc/kubernetes/manifests/kube-scheduler.manifest
-    defaultconf: /etc/kubernetes/manifests/kube-scheduler.yaml
+    defaultconf: /var/snap/kube-scheduler/current/args
 
   controllermanager:
     bins:
@@ -52,7 +52,7 @@ master:
     confs:
       - /etc/kubernetes/manifests/kube-controller-manager.yaml
       - /etc/kubernetes/manifests/kube-controller-manager.manifest
-    defaultconf: /etc/kubernetes/manifests/kube-controller-manager.yaml
+    defaultconf: /var/snap/kube-controller-manager/current/args
 
   etcd:
     optional: true
@@ -103,8 +103,8 @@ node:
     confs:
       - /etc/kubernetes/proxy
       - /etc/kubernetes/addons/kube-proxy-daemonset.yaml
-    defaultconf: /etc/kubernetes/addons/kube-proxy-daemonset.yaml
-    defaultkubeconfig: "/etc/kubernetes/proxy.conf"
+    defaultconf: /root/cdk/kubeproxyconfig
+    defaultkubeconfig: /var/snap/kube-proxy/current/args
 
 federated:
   components:

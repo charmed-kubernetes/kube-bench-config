@@ -12,7 +12,6 @@ master:
     - apiserver
     - scheduler
     - controllermanager
-    - etcd 
     - flanneld
     # kubernetes is a component to cover the config file /etc/kubernetes/config that is referred to in the benchmark
     - kubernetes

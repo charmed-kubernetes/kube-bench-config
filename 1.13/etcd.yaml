@@ -153,7 +153,6 @@ groups:
     text: "Ensure that the peer-cert-file and peer-key-file arguments are
     set as appropriate (Scored)"
     audit: "cat /var/snap/etcd/common/etcd.conf.yml"
-    type: "manual"
     tests:
       bin_op: and
       test_items:
@@ -172,7 +171,6 @@ groups:
   - id: 3.2.5
     text: "Ensure that the peer-client-cert-auth argument is set to true (Scored)"
     audit: "cat /var/snap/etcd/common/etcd.conf.yml"
-    type: "manual"
     tests:
       test_items:
       - path: "{.peer-transport-security.client-cert-auth}"
@@ -189,7 +187,6 @@ groups:
   - id: 3.2.6
     text: "Ensure that the peer-auto-tls argument is not set to true (Scored)"
     audit: "cat /var/snap/etcd/common/etcd.conf.yml"
-    type: "manual"
     tests:
       bin_op: or
       test_items:
@@ -209,7 +206,6 @@ groups:
   - id: 3.2.7
     text: "Ensure that a unique Certificate Authority is used for etcd (Not Scored)"
     audit: "cat /var/snap/etcd/common/etcd.conf.yml"
-    type: "manual"
     tests:
       bin_op: and
       test_items:

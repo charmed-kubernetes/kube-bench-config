@@ -93,15 +93,17 @@ groups:
 - id: 3.2
   text: "etcd"
   checks:
+
   - id: 3.2.1
-    text: "Ensure that the --cert-file and --key-file arguments are set as appropriate (Scored)"
-    audit: "ps -ef | grep $etcdbin | grep -v grep"
+    text: "Ensure that the cert-file and key-file arguments are set as appropriate (Scored)"
+    audit: "cat /var/snap/etcd/common/etcd.conf.yml"
     tests:
+      bin_op: and
       test_items:
-      - flag: "--cert-file"
-        set: true
-      - flag:  "--key-file"
-        set: true
+        - path: "{.client-transport-security.cert-file}"
+          set: true
+        - path: "{.client-transport-security.key-file}"
+          set: true
     remediation: |
       Follow the etcd service documentation and configure TLS encryption.
       Then, edit the etcd pod specification file $etcdconf on the
@@ -111,33 +113,36 @@ groups:
     scored: true
 
   - id: 3.2.2
-    text: "Ensure that the --client-cert-auth argument is set to true (Scored)"
-    audit: "ps -ef | grep $etcdbin | grep -v grep"
+    text: "Ensure that the client-cert-auth argument is set to true (Scored)"
+    audit: "cat /var/snap/etcd/common/etcd.conf.yml"
     tests:
       test_items:
-      - flag: "--client-cert-auth"
-        compare:
-          op: eq
-          value: true
-        set: true
+        - path: "{.client-transport-security.client-cert-auth}"
+          compare:
+            op: eq
+            value: true
+          set: true
     remediation: |
-      Edit the etcd pod specification file $etcdconf on the master
-      node and set the below parameter.
-      --client-cert-auth="true"
+      Follow the etcd service documentation and configure TLS encryption.
+      Then, edit the etcd pod specification file $etcdconf on the
+      master node and set the below parameters.
+      --ca-file=</path/to/ca-file>
+      --key-file=</path/to/key-file>
     scored: true
 
   - id: 3.2.3
-    text: "Ensure that the --auto-tls argument is not set to true (Scored)"
-    audit: "ps -ef | grep $etcdbin | grep -v grep"
+    text: "Ensure that the auto-tls argument is not set to true (Scored)"
+    audit: "cat /var/snap/etcd/common/etcd.conf.yml"
     tests:
       bin_op: or
       test_items:
-      - flag: "--auto-tls"
-        set: false
-      - flag: "--auto-tls"
-        compare:
-          op: eq
-          value: false
+        - path: "{.client-transport-security.auto-tls}"
+          set: false
+        - path: "{.client-transport-security.auto-tls}"
+          compare:
+            op: eq
+            value: false
+          set: true
     remediation: |
       Edit the etcd pod specification file $etcdconf on the master
       node and either remove the --auto-tls parameter or set it to false.
@@ -145,17 +150,16 @@ groups:
     scored: true
 
   - id: 3.2.4
-    text: "Ensure that the --peer-cert-file and --peer-key-file arguments are
+    text: "Ensure that the peer-cert-file and peer-key-file arguments are
     set as appropriate (Scored)"
-    audit: "ps -ef | grep $etcdbin | grep -v grep"
-    type: "manual"
+    audit: "cat /var/snap/etcd/common/etcd.conf.yml"
     tests:
       bin_op: and
       test_items:
-      - flag: "--peer-cert-file"
-        set: true
-      - flag: "--peer-key-file"
-        set: true
+        - path: "{.peer-transport-security.cert-file}"
+          set : true
+        - path: "{.peer-transport-security.key-file}"
+          set: true
     remediation: |
       Follow the etcd service documentation and configure peer TLS encryption as appropriate
       for your etcd cluster. Then, edit the etcd pod specification file $etcdconf on the
@@ -165,12 +169,11 @@ groups:
     scored: true
 
   - id: 3.2.5
-    text: "Ensure that the --peer-client-cert-auth argument is set to true (Scored)"
-    audit: "ps -ef | grep $etcdbin | grep -v grep"
-    type: "manual"
+    text: "Ensure that the peer-client-cert-auth argument is set to true (Scored)"
+    audit: "cat /var/snap/etcd/common/etcd.conf.yml"
     tests:
       test_items:
-      - flag: "--peer-client-cert-auth"
+      - path: "{.peer-transport-security.client-cert-auth}"
         compare:
           op: eq
           value: true
@@ -182,15 +185,14 @@ groups:
     scored: true
 
   - id: 3.2.6
-    text: "Ensure that the --peer-auto-tls argument is not set to true (Scored)"
-    audit: "ps -ef | grep $etcdbin | grep -v grep"
-    type: "manual"
+    text: "Ensure that the peer-auto-tls argument is not set to true (Scored)"
+    audit: "cat /var/snap/etcd/common/etcd.conf.yml"
     tests:
       bin_op: or
       test_items:
-      - flag: "--peer-auto-tls"
+      - path: "{.peer-transport-security.auto-tls}"
         set: false
-      - flag: "--peer-auto-tls"
+      - path: "{.peer-transport-security.auto-tls}"
         compare:
           op: eq
           value: false
@@ -203,11 +205,13 @@ groups:
 
   - id: 3.2.7
     text: "Ensure that a unique Certificate Authority is used for etcd (Not Scored)"
-    audit: "ps -ef | grep $etcdbin | grep -v grep"
-    type: "manual"
+    audit: "cat /var/snap/etcd/common/etcd.conf.yml"
     tests:
+      bin_op: and
       test_items:
-      - flag: "--trusted-ca-file"
+      - path: "{.client-transport-security.trusted-ca-file}"
+        set: true
+      - path: "{.peer-transport-security.trusted-ca-file}"
         set: true
     remediation: |
       Follow the etcd documentation and create a dedicated certificate authority setup for the

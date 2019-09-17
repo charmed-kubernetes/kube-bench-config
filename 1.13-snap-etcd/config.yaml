@@ -1,26 +1,6 @@
 ---
-## Controls Files. 
-# These are YAML files that hold all the details for running checks.
-#
-## Uncomment to use different control file paths.
-masterControls: ./cfg-ck/1.13/etcd.yaml
-# nodeControls: ./cfg/node.yaml
-# federatedControls: ./cfg/federated.yaml
+## Version-specific settings that override the values in cfg/config.yaml
 
 master:
   components:
     - etcd
-    # kubernetes is a component to cover the config file /etc/kubernetes/config that is referred to in the benchmark
-    - kubernetes
-
-  kubernetes:
-    defaultconf: /etc/kubernetes/config
-
-  etcd:
-    bins:
-      - "etcd"
-    confs:
-      - /etc/kubernetes/manifests/etcd.yaml
-      - /etc/kubernetes/manifests/etcd.manifest
-      - /etc/etcd/etcd.conf
-    defaultconf: /var/snap/etcd/common/etcd.conf.yml

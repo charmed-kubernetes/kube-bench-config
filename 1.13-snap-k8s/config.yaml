@@ -18,6 +18,8 @@ node:
       - /root/cdk/ca.crt
     kubeconfig:
       - /root/cdk/kubeconfig
+    confs:
+      - /root/cdk/kubelet/config.yaml
 
   proxy:
     kubeconfig:

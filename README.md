@@ -1,71 +1,58 @@
 # Introduction
 
-kube-bench is a helpful tool to check whether Kubernetes is deployed
-securely. Learn more at:
+`kube-bench` is a helpful tool to check whether Kubernetes is deployed
+securely. Details are available on the [kube-bench][] website.
 
-https://github.com/aquasecurity/kube-bench
+This repository contains configuration that allows `kube-bench` to accurately
+report benchmark results against snap-based components.
 
-## Installation
+## Usage
 
-kube-bench is designed to run against master and worker nodes. Installation is
-the same across all node types. Perform the following steps on
-`kubernetes-master`, `kubernetes-worker`, and `etcd` units as needed:
+`kube-bench` is designed to run against master and worker nodes. There are
+two methods for using the configuration from this repository with `kube-bench`:
 
-If go is not installed, install and setup `$GOPATH` with the following:
+### Charm action
 
-```bash
-sudo snap install go --classic
-mkdir ~/go
-export GOPATH=~/go
-```
+The [layer-cis-benchmark][] base layer is included in in `kubernetes-master`,
+`kubernetes-worker`, and `etcd` charms. This layer provides a `cis-benchmark`
+action to facilitate the installation and execution of `kube-bench`.
 
-Install kube-bench from source:
+By default, the action will use the contents of this repository as the source
+of the `kube-bench` configuration. Simply run the `cis-benchmark` action on
+desired charms as described in the [layer README][layer-cis-benchmark-readme].
 
-```bash
-go get github.com/aquasecurity/kube-bench
-go get github.com/golang/dep/cmd/dep
-cd $GOPATH/src/github.com/aquasecurity/kube-bench
-$GOPATH/bin/dep ensure -vendor-only
-go build -o kube-bench .
-```
+### Manual
 
-Fetch the configuration files specific to Charmed Kubernetes into a `cfg-ck`
-subdirectory:
+Follow the `kube-bench` installation procedure from the [kube-bench][] website.
+Once installed, clone this repository:
 
 ```bash
-cd $GOPATH/src/github.com/aquasecurity/kube-bench
-git clone https://github.com/charmed-kubernetes/kube-bench-config.git cfg-ck
+git clone https://github.com/charmed-kubernetes/kube-bench-config.git
 ```
 
-## Running kube-bench
+Specify the configuration directory, version, and component for each node you
+wish to test:
 
-Specify the configuration directory and component for each node type you wish
-to test.
-
-### kubernetes-master
+#### kubernetes-master
 
 ```bash
-cd $GOPATH/src/github.com/aquasecurity/kube-bench
-./kube-bench master -D cfg-ck
+kube-bench -D /path/to/kube-bench-config --version 1.13-snap-k8s master
 ```
 
-### kubernetes-worker
+#### kubernetes-worker
 
 ```bash
-cd $GOPATH/src/github.com/aquasecurity/kube-bench
-./kube-bench node -D cfg-ck
+kube-bench -D /path/to/kube-bench-config --version 1.13-snap-k8s node
 ```
 
-### etcd
-
-kube-bench considers `etcd` to be a master component. Charmed Kubernetes uses
-standalone etcd units, so kube-bench must be setup with `etcd` tests in a
-specific location. You will also need to specify a version string, as there
-are no `kubelet` or `kubectl` binaries for kube-bench to derive a version
-string.
+#### etcd
 
 ```bash
-cd $GOPATH/src/github.com/aquasecurity/kube-bench
-cp cfg-ck/1.13/etcd.yaml cfg-ck/1.13/master.yaml
-./kube-bench master -D cfg-ck --config cfg-ck/config-etcd.yaml --version 1.13
+kube-bench -D /path/to/kube-bench-config --version 1.13-snap-etcd master
 ```
+
+<!-- LINKS -->
+
+[kube-bench]: https://github.com/aquasecurity/kube-bench
+[layer-cis-benchmark]: https://github.com/charmed-kubernetes/layer-cis-benchmark
+[layer-cis-benchmark-readme]: https://github.com/charmed-kubernetes/layer-cis-benchmark/blob/master/README.md

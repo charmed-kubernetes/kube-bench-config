@@ -107,6 +107,7 @@ groups:
       - id: 1.1.7
         text: "Ensure that the etcd pod specification file permissions are set to 644 or more restrictive (Scored)"
         audit: "/bin/sh -c 'if test -e $etcdconf; then stat -c permissions=%a $etcdconf; fi'"
+        type: "skip"
         tests:
           test_items:
             - flag: "permissions"
@@ -123,6 +124,7 @@ groups:
       - id: 1.1.8
         text: "Ensure that the etcd pod specification file ownership is set to root:root (Scored)"
         audit: "/bin/sh -c 'if test -e $etcdconf; then stat -c %U:%G $etcdconf; fi'"
+        type: "skip"
         tests:
           test_items:
             - flag: "root:root"
@@ -159,6 +161,7 @@ groups:
       - id: 1.1.11
         text: "Ensure that the etcd data directory permissions are set to 700 or more restrictive (Scored)"
         audit: ps -ef | grep $etcdbin | grep -- --data-dir | sed 's%.*data-dir[= ]\([^ ]*\).*%\1%' | xargs stat -c permissions=%a
+        type: "skip"
         tests:
           test_items:
             - flag: "permissions"
@@ -177,6 +180,7 @@ groups:
       - id: 1.1.12
         text: "Ensure that the etcd data directory ownership is set to etcd:etcd (Scored)"
         audit: ps -ef | grep $etcdbin | grep -- --data-dir | sed 's%.*data-dir[= ]\([^ ]*\).*%\1%' | xargs stat -c %U:%G
+        type: "skip"
         tests:
           test_items:
             - flag: "etcd:etcd"
@@ -192,6 +196,7 @@ groups:
       - id: 1.1.13
         text: "Ensure that the admin.conf file permissions are set to 644 or more restrictive (Scored)"
         audit: "/bin/sh -c 'if test -e /etc/kubernetes/admin.conf; then stat -c permissions=%a /etc/kubernetes/admin.conf; fi'"
+        type: "skip"
         tests:
           test_items:
             - flag: "permissions"
@@ -208,6 +213,7 @@ groups:
       - id: 1.1.14
         text: "Ensure that the admin.conf file ownership is set to root:root (Scored)"
         audit: "/bin/sh -c 'if test -e /etc/kubernetes/admin.conf; then stat -c %U:%G /etc/kubernetes/admin.conf; fi'"
+        type: "skip"
         tests:
           test_items:
             - flag: "root:root"
@@ -224,6 +230,7 @@ groups:
       - id: 1.1.15
         text: "Ensure that the scheduler.conf file permissions are set to 644 or more restrictive (Scored)"
         audit: "/bin/sh -c 'if test -e /etc/kubernetes/scheduler.conf; then stat -c permissions=%a /etc/kubernetes/scheduler.conf; fi'"
+        type: "skip"
         tests:
           test_items:
             - flag: "permissions"
@@ -240,6 +247,7 @@ groups:
       - id: 1.1.16
         text: "Ensure that the scheduler.conf file ownership is set to root:root (Scored)"
         audit: "/bin/sh -c 'if test -e /etc/kubernetes/scheduler.conf; then stat -c %U:%G /etc/kubernetes/scheduler.conf; fi'"
+        type: "skip"
         tests:
           test_items:
             - flag: "root:root"
@@ -256,6 +264,7 @@ groups:
       - id: 1.1.17
         text: "Ensure that the controller-manager.conf file permissions are set to 644 or more restrictive (Scored)"
         audit: "/bin/sh -c 'if test -e /etc/kubernetes/controller-manager.conf; then stat -c permissions=%a /etc/kubernetes/controller-manager.conf; fi'"
+        type: "skip"
         tests:
           test_items:
             - flag: "permissions"
@@ -272,6 +281,7 @@ groups:
       - id: 1.1.18
         text: "Ensure that the controller-manager.conf file ownership is set to root:root (Scored)"
         audit: "/bin/sh -c 'if test -e /etc/kubernetes/controller-manager.conf; then stat -c %U:%G /etc/kubernetes/controller-manager.conf; fi'"
+        type: "skip"
         tests:
           test_items:
             - flag: "root:root"
@@ -287,32 +297,32 @@ groups:
 
       - id: 1.1.19
         text: "Ensure that the Kubernetes PKI directory and file ownership is set to root:root (Scored)"
-        audit: "ls -laR /etc/kubernetes/pki/"
+        audit: "ls -laR /root/cdk/"
         type: "manual"
         remediation: |
           Run the below command (based on the file location on your system) on the master node.
           For example,
-          chown -R root:root /etc/kubernetes/pki/
+          chown -R root:root /root/cdk/
         scored: true
 
       - id: 1.1.20
         text: "Ensure that the Kubernetes PKI certificate file permissions are set to 644 or more restrictive (Scored)"
-        audit: "stat -c %n\ %a /etc/kubernetes/pki/*.crt"
+        audit: "stat -c %n\ %a /root/cdk/*.crt"
         type: "manual"
         remediation: |
           Run the below command (based on the file location on your system) on the master node.
           For example,
-          chmod -R 644 /etc/kubernetes/pki/*.crt
+          chmod -R 644 /root/cdk/*.crt
         scored: true
 
       - id: 1.1.21
         text: "Ensure that the Kubernetes PKI key file permissions are set to 600 (Scored)"
-        audit: "stat -c %n\ %a /etc/kubernetes/pki/*.key"
+        audit: "stat -c %n\ %a /root/cdk/*.key"
         type: "manual"
         remediation: |
           Run the below command (based on the file location on your system) on the master node.
           For example,
-          chmod -R 600 /etc/kubernetes/pki/*.key
+          chmod -R 600 /root/cdk/*.key
         scored: true
 
   - id: 1.2

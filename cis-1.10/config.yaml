@@ -1,0 +1,39 @@
+---
+## Version-specific settings that override the values in cfg/config.yaml
+
+master:
+  components:
+    - apiserver
+    - scheduler
+    - controllermanager
+    - flanneld
+    - kubelet
+
+  scheduler:
+    confs:
+    - /root/cdk/kube-scheduler-config.yaml
+    kubeconfig:
+    - /root/cdk/kubeschedulerconfig
+
+  controllermanager:
+    kubeconfig:
+    - /root/cdk/kubecontrollermanagerconfig
+
+node:
+  components:
+    - kubelet
+    - proxy
+
+  kubelet:
+    cafile:
+    - /root/cdk/ca.crt
+    kubeconfig:
+    - /root/cdk/kubeconfig
+    confs:
+    - /root/cdk/kubelet/config.yaml
+
+  proxy:
+    kubeconfig:
+    - /root/cdk/kubeproxyconfig
+    svc:
+    - /etc/systemd/system/snap.kube-proxy.daemon.service
